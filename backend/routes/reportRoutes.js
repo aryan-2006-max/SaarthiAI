@@ -1,0 +1,11 @@
+import express from 'express';
+import { createReport, getReports, getUserReports, updateReportStatus, upvoteReport } from '../controllers/reportController.js';
+import { protect } from '../middleware/auth.js';
+import { authorize } from '../middleware/roleAuth.js';
+const router = express.Router();
+router.get('/', getReports);
+router.post('/', protect, createReport);
+router.get('/user', protect, getUserReports);
+router.put('/:id/status', protect, authorize('admin'), updateReportStatus);
+router.put('/:id/upvote', protect, upvoteReport);
+export default router;

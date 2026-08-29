@@ -1,0 +1,11 @@
+import express from 'express';
+import { planJourney, startJourney, getActiveJourney, completeJourney, replanJourney } from '../controllers/journeyController.js';
+import { protect } from '../middleware/auth.js';
+const router = express.Router();
+router.use(protect);
+router.post('/plan', planJourney);
+router.post('/start', startJourney);
+router.get('/active', getActiveJourney);
+router.put('/:id/complete', completeJourney);
+router.post('/:id/replan', replanJourney);
+export default router;

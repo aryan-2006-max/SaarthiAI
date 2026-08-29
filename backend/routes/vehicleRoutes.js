@@ -1,0 +1,10 @@
+import express from 'express';
+import { getVehicles, getVehicle, updateOccupancy, getVehiclesByRoute } from '../controllers/vehicleController.js';
+import { protect } from '../middleware/auth.js';
+import { authorize } from '../middleware/roleAuth.js';
+const router = express.Router();
+router.get('/', getVehicles);
+router.get('/route/:routeId', getVehiclesByRoute);
+router.get('/:id', getVehicle);
+router.put('/:id/occupancy', protect, authorize('operator'), updateOccupancy);
+export default router;

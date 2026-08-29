@@ -1,0 +1,10 @@
+import express from 'express';
+import { getDisruptions, getActiveDisruptions, createDisruption, updateDisruption } from '../controllers/disruptionController.js';
+import { protect } from '../middleware/auth.js';
+import { authorize } from '../middleware/roleAuth.js';
+const router = express.Router();
+router.get('/', getDisruptions);
+router.get('/active', getActiveDisruptions);
+router.post('/', protect, authorize('admin'), createDisruption);
+router.put('/:id', protect, authorize('admin'), updateDisruption);
+export default router;

@@ -1,0 +1,10 @@
+import express from 'express';
+import { chat, getFareOptimization, getRecommendation, getDailyBriefing } from '../controllers/aiController.js';
+import { protect } from '../middleware/auth.js';
+const router = express.Router();
+router.use(protect);
+router.post('/chat', chat);
+router.get('/fare-optimization', getFareOptimization);
+router.get('/recommendation', getRecommendation);
+router.get('/daily-briefing', getDailyBriefing);
+export default router;

@@ -1,0 +1,12 @@
+import express from 'express';
+import { getDashboard, getOperatorVehicles, getOperatorRoutes, getOperatorAnalytics } from '../controllers/operatorController.js';
+import { protect } from '../middleware/auth.js';
+import { authorize } from '../middleware/roleAuth.js';
+const router = express.Router();
+router.use(protect);
+router.use(authorize('operator'));
+router.get('/dashboard', getDashboard);
+router.get('/vehicles', getOperatorVehicles);
+router.get('/routes', getOperatorRoutes);
+router.get('/analytics', getOperatorAnalytics);
+export default router;

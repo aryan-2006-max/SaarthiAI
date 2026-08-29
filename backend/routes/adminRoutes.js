@@ -1,0 +1,16 @@
+import express from 'express';
+import { getOverview, getAnalytics, getCrowdHeatmap, getTrafficHeatmap, getDemandPredictions, getRouteAnalytics, getAllReports, getAllUsers } from '../controllers/adminController.js';
+import { protect } from '../middleware/auth.js';
+import { authorize } from '../middleware/roleAuth.js';
+const router = express.Router();
+router.use(protect);
+router.use(authorize('admin'));
+router.get('/overview', getOverview);
+router.get('/analytics', getAnalytics);
+router.get('/heatmap/crowd', getCrowdHeatmap);
+router.get('/heatmap/traffic', getTrafficHeatmap);
+router.get('/predictions/demand', getDemandPredictions);
+router.get('/analytics/routes', getRouteAnalytics);
+router.get('/reports', getAllReports);
+router.get('/users', getAllUsers);
+export default router;
