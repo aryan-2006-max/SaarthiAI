@@ -140,11 +140,11 @@ const Home = () => {
           <div className="grid grid-cols-4 gap-4">
             {[
               { icon: <FiMapPin />, label: 'Plan', path: '/plan' },
-              { icon: <FiUsers />, label: 'Crowd', path: '/crowd' },
-              { icon: <FiCreditCard />, label: 'Card', path: '/saarthi-card' },
-              { icon: <FiActivity />, label: 'Wallet', path: '/wallet' },
+              { icon: <FiUsers />, label: 'Crowd', path: '/crowd/1' },
+              { icon: <FiCreditCard />, label: 'Card', path: '/card' },
+              { icon: <FiActivity />, label: 'Live Buses', path: '/live-buses' },
               { icon: <FiShield />, label: 'Safety', path: '/safety' },
-              { icon: <FiMessageCircle />, label: 'AI', path: '/ai' },
+              { icon: <FiMessageCircle />, label: 'AI', path: '/assistant' },
             ].map((action, idx) => (
               <div key={idx} className="flex flex-col items-center space-y-1 cursor-pointer" onClick={() => navigate(action.path)}>
                 <div className="w-12 h-12 bg-sky-50 rounded-full flex items-center justify-center text-sky-600 text-xl border border-sky-100 hover:bg-sky-100 transition-colors">

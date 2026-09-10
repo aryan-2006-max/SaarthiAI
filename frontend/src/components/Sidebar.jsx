@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
-import { FiHome, FiMap, FiCompass, FiCreditCard, FiUser, FiSettings, FiShield, FiHeart, FiMessageCircle, FiDollarSign, FiList, FiBell, FiFlag, FiActivity, FiLogOut, FiBarChart } from 'react-icons/fi';
+import { FiHome, FiMap, FiCompass, FiCreditCard, FiUser, FiSettings, FiShield, FiHeart, FiMessageCircle, FiDollarSign, FiList, FiBell, FiFlag, FiActivity, FiLogOut, FiBarChart, FiNavigation } from 'react-icons/fi';
 
 export const Sidebar = () => {
   const { user, logout } = useAuthStore();
@@ -11,6 +11,7 @@ export const Sidebar = () => {
     { name: 'Home', path: '/home', icon: FiHome },
     { name: 'Plan Journey', path: '/plan', icon: FiMap },
     { name: 'Live Journey', path: '/journey', icon: FiCompass },
+    { name: 'Live Bus Tracking', path: '/live-buses', icon: FiNavigation },
   ];
 
   const serviceLinks = [

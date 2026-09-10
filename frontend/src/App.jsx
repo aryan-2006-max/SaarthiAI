@@ -21,6 +21,7 @@ const LiveJourney = lazy(() => import('./pages/LiveJourney').catch(() => ({ defa
 const CrowdDetails = lazy(() => import('./pages/CrowdDetails').catch(() => ({ default: () => <div /> })));
 const LastMileOptions = lazy(() => import('./pages/LastMileOptions').catch(() => ({ default: () => <div /> })));
 const AIAssistant = lazy(() => import('./pages/AIAssistant').catch(() => ({ default: () => <div /> })));
+const LiveBusTracking = lazy(() => import('./pages/LiveBusTracking').catch(() => ({ default: () => <div /> })));
 
 // Financial Pages
 const SaarthiCard = lazy(() => import('./pages/SaarthiCard').catch(() => ({ default: () => <div /> })));
@@ -59,6 +60,7 @@ const App = () => {
           <Route path="/crowd/:id" element={<CrowdDetails />} />
           <Route path="/last-mile" element={<LastMileOptions />} />
           <Route path="/assistant" element={<AIAssistant />} />
+          <Route path="/live-buses" element={<LiveBusTracking />} />
           <Route path="/card" element={<SaarthiCard />} />
           <Route path="/wallet" element={<Wallet />} />
           <Route path="/transactions" element={<Transactions />} />
