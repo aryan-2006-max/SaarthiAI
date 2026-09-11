@@ -55,7 +55,7 @@ export default function Home() {
       <div className="bg-sky-50 rounded-xl p-3 flex items-center shadow-sm border border-sky-100">
         <span className="text-amber-500 text-xl mr-3 flex-shrink-0 leading-none">🌧️</span>
         <span className="text-sm font-semibold text-slate-900 truncate">
-          Rain expected · 🔴 Heavy Traffic · 🟡 Moderate Crowd
+          Rain expected ·  Heavy Traffic ·  Moderate Crowd
         </span>
       </div>
 
