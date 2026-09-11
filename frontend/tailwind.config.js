@@ -4,15 +4,16 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
         primary: {
-          light: '#E0F2FE', // sky-100
-          DEFAULT: '#0EA5E9', // sky-500
-          dark: '#0369A1', // sky-700
+          light: '#E0F2FE',
+          DEFAULT: '#0EA5E9',
+          dark: '#0369A1',
         },
-        surface: '#F0F9FF', // sky-50
+        surface: '#F0F9FF',
       },
     },
   },

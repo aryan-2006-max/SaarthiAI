@@ -1,10 +1,12 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
-import { FiHome, FiMap, FiCompass, FiCreditCard, FiUser, FiSettings, FiShield, FiHeart, FiMessageCircle, FiDollarSign, FiList, FiBell, FiFlag, FiActivity, FiLogOut, FiBarChart, FiNavigation } from 'react-icons/fi';
+import { useUiStore } from '../store/uiStore';
+import { FiHome, FiMap, FiCompass, FiCreditCard, FiUser, FiSettings, FiShield, FiHeart, FiMessageCircle, FiDollarSign, FiList, FiBell, FiFlag, FiActivity, FiLogOut, FiBarChart, FiNavigation, FiMoon, FiSun } from 'react-icons/fi';
 
 export const Sidebar = () => {
   const { user, logout } = useAuthStore();
+  const { darkMode, toggleDarkMode } = useUiStore();
   const navigate = useNavigate();
 
   const mainLinks = [
@@ -46,7 +48,7 @@ export const Sidebar = () => {
       to={item.path}
       className={({ isActive }) =>
         `flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors text-sm ${
-          isActive ? 'bg-sky-50 text-sky-600 font-medium' : 'text-slate-600 hover:bg-slate-50'
+          isActive ? 'bg-sky-50 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400 font-medium' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700'
         }`
       }
     >
@@ -57,7 +59,7 @@ export const Sidebar = () => {
 
   const Section = ({ title, links }) => (
     <div>
-      <h2 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 px-4">{title}</h2>
+      <h2 className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2 px-4">{title}</h2>
       <div className="space-y-0.5">
         {links.map(link => <NavItem key={link.name} item={link} />)}
       </div>
@@ -70,7 +72,7 @@ export const Sidebar = () => {
   };
 
   return (
-    <aside className="hidden md:flex flex-col w-64 h-screen border-r border-sky-100 bg-white fixed top-0 left-0 z-40">
+    <aside className="hidden md:flex flex-col w-64 h-screen border-r border-sky-100 dark:border-slate-700 bg-white dark:bg-slate-800 fixed top-0 left-0 z-40 transition-colors">
       <div className="p-5 bg-gradient-to-r from-sky-500 to-sky-600 text-white">
         <h1 className="text-xl font-bold mb-1">SaarthiAI</h1>
         <p className="text-xs text-white/70 mb-3">Plan smarter → Travel easier</p>
@@ -96,7 +98,7 @@ export const Sidebar = () => {
           to="/profile"
           className={({ isActive }) =>
             `flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors text-sm ${
-              isActive ? 'bg-sky-50 text-sky-600 font-medium' : 'text-slate-600 hover:bg-slate-50'
+              isActive ? 'bg-sky-50 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400 font-medium' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700'
             }`
           }
         >
@@ -107,7 +109,7 @@ export const Sidebar = () => {
           to="/settings"
           className={({ isActive }) =>
             `flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors text-sm ${
-              isActive ? 'bg-sky-50 text-sky-600 font-medium' : 'text-slate-600 hover:bg-slate-50'
+              isActive ? 'bg-sky-50 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400 font-medium' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700'
             }`
           }
         >
@@ -116,10 +118,17 @@ export const Sidebar = () => {
         </NavLink>
       </div>
 
-      <div className="p-3 border-t border-sky-100">
+      <div className="p-3 border-t border-sky-100 dark:border-slate-700 space-y-1">
+        <button
+          onClick={toggleDarkMode}
+          className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors text-sm w-full"
+        >
+          {darkMode ? <FiSun className="text-lg" /> : <FiMoon className="text-lg" />}
+          <span>{darkMode ? 'Light Mode' : 'Dark Mode'}</span>
+        </button>
         <button
           onClick={handleLogout}
-          className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-red-500 hover:bg-red-50 transition-colors text-sm w-full"
+          className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors text-sm w-full"
         >
           <FiLogOut className="text-lg" />
           <span>Logout</span>
