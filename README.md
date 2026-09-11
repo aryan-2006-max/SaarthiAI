@@ -285,6 +285,10 @@ See [docs/DATABASE.md](docs/DATABASE.md) for detailed schema documentation.
 | 28 | Personalized route scoring | ✅ Implemented |
 | 29 | Explainable AI recommendations | ✅ Implemented |
 | 30 | Analytics dashboards | ✅ Implemented |
+| 31 | Real-time Live Bus Tracking on Leaflet Map | ✅ Implemented |
+| 32 | AI Crowd Prediction per Bus | ✅ Implemented |
+| 33 | AI Bus Deployment Optimizer (Authority) | ✅ Implemented |
+| 34 | Dark Mode & App-style Dashboard | ✅ Implemented |
 
 ## 🔄 Simulated vs Real
 
@@ -333,6 +337,7 @@ Designed specifically for Indian conditions:
 
 ## 📄 Documentation
 
+- [Detailed Project Report](docs/PROJECT_REPORT.md)
 - [System Architecture](docs/ARCHITECTURE.md)
 - [Database Schema](docs/DATABASE.md)
 - [API Documentation](docs/API.md)
