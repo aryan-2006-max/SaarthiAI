@@ -23,6 +23,11 @@ const LastMileOptions = lazy(() => import('./pages/LastMileOptions').catch(() =>
 const AIAssistant = lazy(() => import('./pages/AIAssistant').catch(() => ({ default: () => <div /> })));
 const LiveBusTracking = lazy(() => import('./pages/LiveBusTracking').catch(() => ({ default: () => <div /> })));
 
+// New Booking & Driver Partner Pages
+const IntercityBooking = lazy(() => import('./pages/IntercityBooking').catch(() => ({ default: () => <div /> })));
+const DailyCommuteBooking = lazy(() => import('./pages/DailyCommuteBooking').catch(() => ({ default: () => <div /> })));
+const DriverPortal = lazy(() => import('./pages/DriverPortal').catch(() => ({ default: () => <div /> })));
+
 // Financial Pages
 const SaarthiCard = lazy(() => import('./pages/SaarthiCard').catch(() => ({ default: () => <div /> })));
 const Wallet = lazy(() => import('./pages/Wallet').catch(() => ({ default: () => <div /> })));
@@ -57,6 +62,9 @@ const App = () => {
           <Route path="/routes" element={<RouteResults />} />
           <Route path="/route/:id" element={<RouteDetails />} />
           <Route path="/journey" element={<LiveJourney />} />
+          <Route path="/intercity-booking" element={<IntercityBooking />} />
+          <Route path="/daily-commute-booking" element={<DailyCommuteBooking />} />
+          <Route path="/driver-portal" element={<DriverPortal />} />
           <Route path="/crowd/:id" element={<CrowdDetails />} />
           <Route path="/last-mile" element={<LastMileOptions />} />
           <Route path="/assistant" element={<AIAssistant />} />

@@ -2,7 +2,12 @@ import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { useUiStore } from '../store/uiStore';
-import { FiHome, FiMap, FiCompass, FiCreditCard, FiUser, FiSettings, FiShield, FiHeart, FiMessageCircle, FiDollarSign, FiList, FiBell, FiFlag, FiActivity, FiLogOut, FiBarChart, FiNavigation, FiMoon, FiSun } from 'react-icons/fi';
+import { 
+  FiHome, FiMap, FiCompass, FiCreditCard, FiUser, FiSettings, 
+  FiShield, FiHeart, FiMessageCircle, FiDollarSign, FiList, 
+  FiBell, FiFlag, FiActivity, FiLogOut, FiBarChart, FiNavigation, 
+  FiMoon, FiSun, FiZap, FiTruck
+} from 'react-icons/fi';
 
 export const Sidebar = () => {
   const { user, logout } = useAuthStore();
@@ -14,6 +19,12 @@ export const Sidebar = () => {
     { name: 'Plan Journey', path: '/plan', icon: FiMap },
     { name: 'Live Journey', path: '/journey', icon: FiCompass },
     { name: 'Live Bus Tracking', path: '/live-buses', icon: FiNavigation },
+  ];
+
+  const bookingLinks = [
+    { name: '1-Click Daily Commute', path: '/daily-commute-booking', icon: FiZap },
+    { name: 'Delhi-Jaipur Intercity', path: '/intercity-booking', icon: FiNavigation },
+    { name: 'Authorised Driver Portal', path: '/driver-portal', icon: FiTruck },
   ];
 
   const serviceLinks = [
@@ -89,6 +100,7 @@ export const Sidebar = () => {
 
       <div className="flex-1 overflow-y-auto p-3 space-y-5">
         <Section title="Main" links={mainLinks} />
+        <Section title="Booking & Rides" links={bookingLinks} />
         <Section title="Services" links={serviceLinks} />
         <Section title="Finance" links={financeLinks} />
         <Section title="Community" links={communityLinks} />
