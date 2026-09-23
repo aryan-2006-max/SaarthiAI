@@ -25,7 +25,7 @@ export default function Home() {
 
   const features = [
     { icon: <FiZap />, label: '1-Click Commute', path: '/daily-commute-booking', color: 'text-amber-500' },
-    { icon: <FiNavigation />, label: 'Intercity Delhi-JAI', path: '/intercity-booking', color: 'text-sky-500' },
+    { icon: <FiNavigation />, label: 'Intercity Connectivity', path: '/intercity-booking', color: 'text-sky-500' },
     { icon: <FiTruck />, label: 'Driver Portal', path: '/driver-portal', color: 'text-emerald-500' },
     { icon: <FiMap />, label: 'Plan Journey', path: '/plan', color: 'text-sky-500' },
     { icon: <FiCompass />, label: 'Live Journey', path: '/journey', color: 'text-sky-500' },
@@ -96,18 +96,18 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Card 2: Delhi to Jaipur Intercity */}
+        {/* Card 2: Intercity Connectivity */}
         <div 
           onClick={() => navigate('/intercity-booking')}
           className="bg-gradient-to-br from-sky-500 to-indigo-600 rounded-2xl p-5 text-white shadow-lg cursor-pointer hover:scale-[1.02] transition-transform relative overflow-hidden"
         >
           <div className="absolute -right-4 -bottom-4 opacity-20 text-7xl font-bold">🚆</div>
           <span className="bg-white/20 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-            Door-to-Door Journey
+            Door-to-Door All-India
           </span>
-          <h3 className="text-lg font-extrabold mt-2">Delhi → Jaipur Booking</h3>
+          <h3 className="text-lg font-extrabold mt-2">Intercity Connectivity</h3>
           <p className="text-xs text-sky-100 mt-1">
-            Uber/Ola style home pickup auto → Vande Bharat Train → Jaipur convenience cab in one master ticket!
+            Doorstep/Stand pickup → Intercity Express Train/Bus → Destination cab in one master ticket!
           </p>
           <div className="mt-4 flex items-center text-xs font-bold text-white">
             Plan Intercity Trip <FiArrowRight className="ml-1" />

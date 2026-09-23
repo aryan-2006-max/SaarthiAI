@@ -23,7 +23,7 @@ export const Sidebar = () => {
 
   const bookingLinks = [
     { name: '1-Click Daily Commute', path: '/daily-commute-booking', icon: FiZap },
-    { name: 'Delhi-Jaipur Intercity', path: '/intercity-booking', icon: FiNavigation },
+    { name: 'Intercity Connectivity', path: '/intercity-booking', icon: FiNavigation },
     { name: 'Authorised Driver Portal', path: '/driver-portal', icon: FiTruck },
   ];
 
