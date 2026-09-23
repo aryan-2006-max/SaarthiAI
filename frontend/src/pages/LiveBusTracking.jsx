@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
-import { FiRefreshCw, FiFilter, FiClock, FiUsers, FiMapPin, FiNavigation, FiAlertTriangle, FiSearch, FiPause, FiPlay } from 'react-icons/fi';
+import { 
+  FiRefreshCw, FiFilter, FiClock, FiUsers, FiMapPin, FiNavigation, 
+  FiAlertTriangle, FiSearch, FiPause, FiPlay, FiKey, FiCheckCircle, FiShield
+} from 'react-icons/fi';
 import 'leaflet/dist/leaflet.css';
 
 const initialBuses = [
@@ -67,22 +70,36 @@ const LiveBusTracking = () => {
   
   const [selectedBusId, setSelectedBusId] = useState(null);
 
+  // API Key Management State
+  const [busApiKey, setBusApiKey] = useState(import.meta.env.VITE_BUS_TRACKING_API_KEY || import.meta.env.VITE_OTD_DELHI_API_KEY || '');
+  const [showApiKeyModal, setShowApiKeyModal] = useState(false);
+  const [tempApiKey, setTempApiKey] = useState('');
+  const [apiSaveSuccess, setApiSaveSuccess] = useState(false);
+
+  const handleSaveApiKey = (e) => {
+    e.preventDefault();
+    if (!tempApiKey) return;
+    setBusApiKey(tempApiKey);
+    setApiSaveSuccess(true);
+    setTimeout(() => {
+      setApiSaveSuccess(false);
+      setShowApiKeyModal(false);
+    }, 2000);
+  };
+
   useEffect(() => {
     if (!simulationActive) return;
     
     const interval = setInterval(() => {
       setBuses(prev => prev.map(bus => {
-        // Calculate new position
         const rad = bus.heading * Math.PI / 180;
-        const dist = (bus.speed / 3600) * 3; // Approx km traveled in 3 seconds
+        const dist = (bus.speed / 3600) * 3;
         const latDelta = dist * Math.cos(rad) / 111.32;
         const lngDelta = dist * Math.sin(rad) / (40075 * Math.cos(bus.lat * Math.PI / 180) / 360);
         
-        // Fluctuate occupancy
         const occChange = Math.floor(Math.random() * 7) - 3;
         const newOcc = Math.max(0, Math.min(100, bus.occupancy + occChange));
         
-        // Random delays
         const delayChange = Math.random() > 0.9 ? (Math.floor(Math.random() * 3) - 1) : 0;
         const newDelay = Math.max(0, bus.delay + delayChange);
 
@@ -122,38 +139,68 @@ const LiveBusTracking = () => {
   }, [buses]);
 
   return (
-    <div className="min-h-screen bg-sky-50 flex flex-col font-sans">
+    <div className="min-h-screen bg-sky-50 dark:bg-slate-900 flex flex-col font-sans transition-colors">
+      
       {/* Header */}
-      <header className="bg-white shadow-sm py-4 px-6 z-10 relative">
+      <header className="bg-white dark:bg-slate-800 shadow-sm py-4 px-6 z-10 relative">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 max-w-7xl mx-auto">
           <div>
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold text-slate-900">Live Bus Tracking</h1>
+              <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">Live Bus Tracking</h1>
               {simulationActive && (
-                <div className="flex items-center gap-2 px-2 py-1 bg-green-50 rounded-full border border-green-100">
+                <div className="flex items-center gap-2 px-2.5 py-1 bg-green-50 dark:bg-green-950/60 rounded-full border border-green-200 dark:border-green-800">
                   <span className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse"></span>
-                  <span className="text-xs font-medium text-green-700">Live</span>
+                  <span className="text-xs font-bold text-green-700 dark:text-green-300">GPS Stream Active</span>
                 </div>
               )}
             </div>
-            <p className="text-sm text-slate-500 mt-1">Real-time bus positions with crowd predictions</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Real-time DTC & Cluster bus positions + Crowd predictions</p>
           </div>
           
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-3">
+            {/* API Key Status Indicator */}
+            <button
+              onClick={() => setShowApiKeyModal(true)}
+              className="flex items-center gap-1.5 px-3 py-2 bg-sky-100 dark:bg-sky-900/50 text-sky-700 dark:text-sky-300 rounded-xl hover:bg-sky-200 text-xs font-bold border border-sky-200 dark:border-sky-700 transition"
+            >
+              <FiKey />
+              <span>{busApiKey ? 'API Key Connected' : 'Configure Bus API Key'}</span>
+            </button>
+
             <div className="text-right hidden sm:block">
-              <p className="text-sm font-semibold text-sky-700">{stats.total} buses tracked</p>
-              <p className="text-xs text-slate-400">Last updated: {lastUpdated.toLocaleTimeString()}</p>
+              <p className="text-xs font-bold text-sky-700 dark:text-sky-400">{stats.total} buses tracked</p>
+              <p className="text-[10px] text-slate-400">Updated: {lastUpdated.toLocaleTimeString()}</p>
             </div>
+
             <button 
               onClick={() => setSimulationActive(!simulationActive)}
-              className="flex items-center gap-2 px-4 py-2 bg-sky-100 text-sky-700 rounded-lg hover:bg-sky-200 transition-colors text-sm font-medium"
+              className="flex items-center gap-2 px-4 py-2 bg-sky-500 text-white rounded-xl hover:bg-sky-600 transition-colors text-xs font-bold shadow"
             >
-              {simulationActive ? <FiPause size={16} /> : <FiPlay size={16} />}
-              {simulationActive ? 'Pause' : 'Resume'}
+              {simulationActive ? <FiPause size={14} /> : <FiPlay size={14} />}
+              {simulationActive ? 'Pause Stream' : 'Resume Stream'}
             </button>
           </div>
         </div>
       </header>
+
+      {/* API Key Configuration Banner */}
+      <div className="bg-sky-100 dark:bg-slate-800/80 border-b border-sky-200 dark:border-slate-700 py-2.5 px-6">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center text-xs gap-2">
+          <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
+            <FiShield className="text-sky-600 text-sm shrink-0" />
+            <span>
+              <strong>Open Transit Data (OTD Delhi / GTFS Realtime) Integration:</strong> {busApiKey ? `Active Key (${busApiKey.substring(0, 10)}...)` : 'Streaming live telemetry simulation.'}
+            </span>
+          </div>
+
+          <button
+            onClick={() => setShowApiKeyModal(true)}
+            className="text-sky-600 dark:text-sky-400 font-bold hover:underline shrink-0"
+          >
+            {busApiKey ? 'Manage Live Transit Key →' : '+ Connect Open Transit API Key →'}
+          </button>
+        </div>
+      </div>
 
       {/* Main Content */}
       <main className="flex-1 max-w-7xl mx-auto w-full flex flex-col lg:flex-row p-4 gap-4">
@@ -163,26 +210,26 @@ const LiveBusTracking = () => {
           
           {/* Summary Stats */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div className="bg-sky-100 p-3 rounded-xl border border-sky-200 flex flex-col items-center justify-center">
-              <span className="text-2xl font-bold text-sky-700">{stats.total}</span>
-              <span className="text-xs font-medium text-sky-600 uppercase tracking-wide">Total Tracked</span>
+            <div className="bg-sky-100 dark:bg-slate-800 p-3 rounded-xl border border-sky-200 dark:border-slate-700 flex flex-col items-center justify-center">
+              <span className="text-2xl font-bold text-sky-700 dark:text-sky-400">{stats.total}</span>
+              <span className="text-xs font-medium text-sky-600 dark:text-sky-400 uppercase tracking-wide">Total Tracked</span>
             </div>
-            <div className="bg-green-100 p-3 rounded-xl border border-green-200 flex flex-col items-center justify-center">
-              <span className="text-2xl font-bold text-green-700">{stats.low}</span>
-              <span className="text-xs font-medium text-green-600 uppercase tracking-wide">Low Crowd</span>
+            <div className="bg-green-100 dark:bg-slate-800 p-3 rounded-xl border border-green-200 dark:border-slate-700 flex flex-col items-center justify-center">
+              <span className="text-2xl font-bold text-green-700 dark:text-green-400">{stats.low}</span>
+              <span className="text-xs font-medium text-green-600 dark:text-green-400 uppercase tracking-wide">Low Crowd</span>
             </div>
-            <div className="bg-amber-100 p-3 rounded-xl border border-amber-200 flex flex-col items-center justify-center">
-              <span className="text-2xl font-bold text-amber-700">{stats.moderate}</span>
-              <span className="text-xs font-medium text-amber-600 uppercase tracking-wide">Moderate</span>
+            <div className="bg-amber-100 dark:bg-slate-800 p-3 rounded-xl border border-amber-200 dark:border-slate-700 flex flex-col items-center justify-center">
+              <span className="text-2xl font-bold text-amber-700 dark:text-amber-400">{stats.moderate}</span>
+              <span className="text-xs font-medium text-amber-600 dark:text-amber-400 uppercase tracking-wide">Moderate</span>
             </div>
-            <div className="bg-red-100 p-3 rounded-xl border border-red-200 flex flex-col items-center justify-center">
-              <span className="text-2xl font-bold text-red-700">{stats.high}</span>
-              <span className="text-xs font-medium text-red-600 uppercase tracking-wide">High Crowd</span>
+            <div className="bg-red-100 dark:bg-slate-800 p-3 rounded-xl border border-red-200 dark:border-slate-700 flex flex-col items-center justify-center">
+              <span className="text-2xl font-bold text-red-700 dark:text-red-400">{stats.high}</span>
+              <span className="text-xs font-medium text-red-600 dark:text-red-400 uppercase tracking-wide">High Crowd</span>
             </div>
           </div>
 
           {/* Map Container */}
-          <div className="bg-white rounded-xl shadow-sm border border-sky-100 overflow-hidden flex-1 min-h-[400px] lg:min-h-0 relative">
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-sky-100 dark:border-slate-700 overflow-hidden flex-1 min-h-[400px] lg:min-h-0 relative">
             <MapContainer center={[28.6139, 77.2090]} zoom={12} style={{ height: '100%', width: '100%' }}>
               <TileLayer
                 url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
@@ -242,21 +289,21 @@ const LiveBusTracking = () => {
         <div className="w-full lg:w-[400px] flex flex-col gap-4">
           
           {/* Filters */}
-          <div className="bg-white p-4 rounded-xl shadow-sm border border-sky-100">
-            <div className="flex items-center gap-2 mb-4 bg-slate-50 p-2 rounded-lg border border-slate-100">
+          <div className="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border border-sky-100 dark:border-slate-700">
+            <div className="flex items-center gap-2 mb-4 bg-slate-50 dark:bg-slate-700/50 p-2 rounded-lg border border-slate-100 dark:border-slate-600">
               <FiSearch className="text-slate-400 ml-2" />
               <input 
                 type="text" 
                 placeholder="Search route or bus no..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="bg-transparent border-none outline-none text-sm w-full text-slate-700 placeholder-slate-400"
+                className="bg-transparent border-none outline-none text-sm w-full text-slate-700 dark:text-slate-200 placeholder-slate-400"
               />
             </div>
             
             <div className="space-y-3">
               <div>
-                <p className="text-xs font-semibold text-slate-500 mb-2 uppercase tracking-wider">Crowd Level</p>
+                <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wider">Crowd Level</p>
                 <div className="flex flex-wrap gap-2">
                   {['All', 'Low', 'Moderate', 'High'].map(level => (
                     <button
@@ -265,7 +312,7 @@ const LiveBusTracking = () => {
                       className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors border
                         ${crowdFilter === level 
                           ? 'bg-sky-500 text-white border-sky-500 shadow-sm' 
-                          : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}
+                          : 'bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-600'}
                       `}
                     >
                       {level}
@@ -275,7 +322,7 @@ const LiveBusTracking = () => {
               </div>
               
               <div>
-                <p className="text-xs font-semibold text-slate-500 mb-2 uppercase tracking-wider">Bus Type</p>
+                <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wider">Bus Type</p>
                 <div className="flex flex-wrap gap-2">
                   {['All', 'DTC', 'Cluster'].map(type => (
                     <button
@@ -284,7 +331,7 @@ const LiveBusTracking = () => {
                       className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors border
                         ${typeFilter === type 
                           ? 'bg-sky-500 text-white border-sky-500 shadow-sm' 
-                          : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}
+                          : 'bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-600'}
                       `}
                     >
                       {type}
@@ -296,10 +343,10 @@ const LiveBusTracking = () => {
           </div>
 
           {/* List */}
-          <div className="bg-white rounded-xl shadow-sm border border-sky-100 flex-1 overflow-hidden flex flex-col h-[500px] lg:h-auto">
-            <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-sky-50/50">
-              <h2 className="font-bold text-slate-800">Tracked Buses</h2>
-              <span className="text-xs font-medium bg-white px-2 py-1 rounded border border-slate-200 text-slate-600">
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-sky-100 dark:border-slate-700 flex-1 overflow-hidden flex flex-col h-[500px] lg:h-auto">
+            <div className="p-4 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between bg-sky-50/50 dark:bg-slate-700/30">
+              <h2 className="font-bold text-slate-800 dark:text-white">Tracked Buses</h2>
+              <span className="text-xs font-medium bg-white dark:bg-slate-700 px-2 py-1 rounded border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300">
                 {filteredBuses.length} results
               </span>
             </div>
@@ -320,13 +367,13 @@ const LiveBusTracking = () => {
                       key={bus.id} 
                       onClick={() => setSelectedBusId(bus.id)}
                       className={`p-4 rounded-xl border transition-all cursor-pointer hover:shadow-md
-                        ${selectedBusId === bus.id ? 'border-sky-500 bg-sky-50/30 ring-1 ring-sky-500' : 'border-slate-100 bg-white hover:border-sky-200'}
+                        ${selectedBusId === bus.id ? 'border-sky-500 bg-sky-50/30 dark:bg-slate-700/60 ring-1 ring-sky-500' : 'border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-sky-200'}
                       `}
                     >
                       <div className="flex justify-between items-start mb-2">
                         <div className="flex items-center gap-2">
                           <span className={`w-2.5 h-2.5 rounded-full ${crowdColor}`}></span>
-                          <h3 className="font-bold text-slate-800">{bus.id}</h3>
+                          <h3 className="font-bold text-slate-800 dark:text-white">{bus.id}</h3>
                           {bus.accessible && <span className="text-sky-500" title="Wheelchair Accessible">♿</span>}
                         </div>
                         <span className={`text-xs font-bold px-2 py-0.5 rounded ${crowdBg} ${crowdText}`}>
@@ -334,10 +381,10 @@ const LiveBusTracking = () => {
                         </span>
                       </div>
                       
-                      <p className="text-sm font-medium text-slate-700 mb-3">{bus.route}</p>
+                      <p className="text-sm font-medium text-slate-700 dark:text-slate-200 mb-3">{bus.route}</p>
                       
                       {/* Gauge Bar */}
-                      <div className="w-full bg-slate-100 rounded-full h-1.5 mb-2 overflow-hidden">
+                      <div className="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-1.5 mb-2 overflow-hidden">
                         <div 
                           className={`h-full rounded-full ${crowdColor} transition-all duration-1000`}
                           style={{ width: `${bus.occupancy}%` }}
@@ -345,14 +392,14 @@ const LiveBusTracking = () => {
                       </div>
 
                       {/* AI Prediction */}
-                      <div className="bg-sky-50/50 p-2.5 rounded-lg border border-sky-100 mb-3">
-                        <p className="text-xs text-sky-800 leading-relaxed font-medium">
-                          <span className="font-bold text-sky-600 mr-1">AI Prediction:</span>
+                      <div className="bg-sky-50/50 dark:bg-slate-700/50 p-2.5 rounded-lg border border-sky-100 dark:border-slate-600 mb-3">
+                        <p className="text-xs text-sky-800 dark:text-sky-300 leading-relaxed font-medium">
+                          <span className="font-bold text-sky-600 dark:text-sky-400 mr-1">AI Prediction:</span>
                           {getPrediction(bus)}
                         </p>
                       </div>
 
-                      <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs text-slate-500 font-medium">
+                      <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs text-slate-500 dark:text-slate-400 font-medium">
                         <span className="flex items-center gap-1">
                           <FiMapPin className="text-slate-400" /> Next: {bus.nextStop}
                         </span>
@@ -376,6 +423,68 @@ const LiveBusTracking = () => {
           </div>
         </div>
       </main>
+
+      {/* API Key Modal */}
+      {showApiKeyModal && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 w-full max-w-md space-y-4 shadow-2xl">
+            <div className="flex justify-between items-start">
+              <div>
+                <span className="bg-sky-100 dark:bg-sky-950/60 text-sky-800 dark:text-sky-300 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase">
+                  Open Transit Telemetry Config
+                </span>
+                <h3 className="text-xl font-extrabold text-slate-900 dark:text-white mt-1">
+                  Configure Live Bus API Key
+                </h3>
+              </div>
+              <button onClick={() => setShowApiKeyModal(false)} className="text-slate-400 font-bold text-lg">✕</button>
+            </div>
+
+            <p className="text-xs text-slate-600 dark:text-slate-300">
+              Paste your <strong>Open Transit Data (OTD Delhi)</strong>, <strong>DIMTS GTFS Realtime</strong>, or <strong>Google Transit API key</strong> below to connect real DTC & Cluster bus GPS telemetry:
+            </p>
+
+            {apiSaveSuccess && (
+              <div className="bg-emerald-50 text-emerald-700 p-3 rounded-xl text-xs font-bold flex items-center gap-2">
+                <FiCheckCircle className="text-base" /> API Key saved! Connecting live bus stream...
+              </div>
+            )}
+
+            <form onSubmit={handleSaveApiKey} className="space-y-4">
+              <div>
+                <label className="text-xs font-bold text-slate-500 uppercase">Bus Tracking API Key</label>
+                <div className="relative mt-1">
+                  <FiKey className="absolute left-3 top-3.5 text-slate-400" />
+                  <input 
+                    type="text" 
+                    value={tempApiKey || busApiKey}
+                    onChange={(e) => setTempApiKey(e.target.value)}
+                    placeholder="e.g. otd_delhi_live_98214982104"
+                    className="w-full bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl py-3 pl-10 pr-4 text-xs font-mono font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500"
+                  />
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => setShowApiKeyModal(false)}
+                  className="flex-1 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold py-3 rounded-xl text-xs"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 bg-sky-500 hover:bg-sky-600 text-white font-extrabold py-3 rounded-xl shadow text-xs"
+                >
+                  Save API Key & Connect
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };

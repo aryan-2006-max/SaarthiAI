@@ -11,6 +11,7 @@ export const env = {
   AI_API_KEY: process.env.AI_API_KEY || process.env.GEMINI_API_KEY || process.env.OPENAI_API_KEY || '',
   MAPS_API_KEY: process.env.MAPS_API_KEY || process.env.GOOGLE_MAPS_API_KEY || '',
   WEATHER_API_KEY: process.env.WEATHER_API_KEY || process.env.OPENWEATHER_API_KEY || '',
+  BUS_TRACKING_API_KEY: process.env.BUS_TRACKING_API_KEY || process.env.OTD_DELHI_API_KEY || process.env.TRANSIT_API_KEY || '',
   RAZORPAY_KEY_ID: process.env.RAZORPAY_KEY_ID || '',
   RAZORPAY_KEY_SECRET: process.env.RAZORPAY_KEY_SECRET || '',
   
