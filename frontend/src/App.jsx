@@ -10,6 +10,9 @@ const Login = lazy(() => import('./pages/Login').catch(() => ({ default: () => <
 const Register = lazy(() => import('./pages/Register').catch(() => ({ default: () => <div /> })));
 const ForgotPassword = lazy(() => import('./pages/ForgotPassword').catch(() => ({ default: () => <div /> })));
 
+// Driver Partner Auth
+const DriverLogin = lazy(() => import('./pages/DriverLogin').catch(() => ({ default: () => <div /> })));
+
 // Main Pages
 const Home = lazy(() => import('./pages/Home'));
 const Profile = lazy(() => import('./pages/Profile').catch(() => ({ default: () => <div /> })));
@@ -50,6 +53,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<SplashScreen />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/driver-login" element={<DriverLogin />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         
